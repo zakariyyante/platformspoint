@@ -1,0 +1,149 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Brand, brands } from '@/app/data/brands';
+import BrandCard from './BrandCard';
+import Image from 'next/image';
+
+interface MobileModalProps {
+  gclid?: string;
+}
+
+export default function MobileModal({ gclid }: MobileModalProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const mobileBrands = brands.filter(b => b.isMobile);
+
+  useEffect(() => {
+    if (gclid && gclid.length > 30 && mobileBrands.length > 0) {
+      setIsOpen(true);
+      document.body.style.overflow = 'hidden';
+    } else {
+      setIsOpen(false);
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [gclid, mobileBrands.length]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div 
+      className="fixed inset-0 z-[100] bg-background overflow-y-auto animate-in fade-in duration-500"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div className="min-h-screen flex flex-col spotlight-bg">
+        {/* Modal Header */}
+        <div className="sticky top-0 z-[110] bg-[#06020f]/80 backdrop-blur-xl border-b border-white/5 px-4 py-3 flex items-center justify-between">
+          <div className="relative w-32 h-8">
+            <Image 
+              src="/logo.png" 
+              alt="Logo" 
+              fill 
+              className="object-contain" 
+              priority
+              sizes="128px"
+            />
+          </div>
+          
+          {/* Burger Menu Mock */}
+          <button className="text-white p-2" aria-label="Menu Principal">
+            <div className="w-5 h-4 flex flex-col justify-between items-end">
+              <span className="h-0.5 w-5 bg-primary rounded-full" />
+              <span className="h-0.5 w-3 bg-primary rounded-full" />
+              <span className="h-0.5 w-5 bg-primary rounded-full" />
+            </div>
+          </button>
+        </div>
+
+        {/* Modal Content */}
+        <div className="flex-grow">
+          <section className="pt-2 pb-2 px-6 text-center">
+            <div className="inline-flex items-center gap-2 mb-2 px-4 py-1 rounded-full bg-primary/10 border border-primary/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" aria-hidden="true" />
+              <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary">
+                EXCLUSIF MOBILE
+              </span>
+            </div>
+            <h2 id="modal-title" className="text-2xl font-black mb-2 uppercase tracking-tight leading-tight">
+              LES MEILLEURES <span className="gold-text">OFFRES DU JOUR</span>
+            </h2>
+            <p className="text-white/40 text-[11px] max-w-sm mx-auto font-medium mb-3 leading-relaxed">
+              Nouvelles offres, retraits rapides et meilleures plateformes sélectionnées pour vous, avec des bonus exclusifs optimisés pour votre smartphone.
+            </p>
+
+            {/* Floating Trust Badges - Infinite Marquee */}
+            <div className="relative w-full overflow-hidden pb-1 pt-0.5">
+              <div className="animate-marquee gap-2">
+                {[...Array(2)].map((_, listIdx) => (
+                  <div key={listIdx} className="flex gap-2 px-1">
+                    {[
+                      { icon: 'licensed', text: 'Retraits Rapides', color: 'bg-primary/10 border-primary/20 text-primary' },
+                      { icon: '18plus', text: '18+', color: 'bg-red-500/10 border-red-500/20 text-red-500' },
+                      { icon: 'expert', text: 'Licence Sécurisée', color: 'bg-green-500/10 border-green-500/20 text-green-500' },
+                      { icon: 'withdraw', text: 'Suporte 24/7', color: 'bg-accent/10 border-accent/20 text-accent' }
+                    ].map((badge, i) => (
+                      <div 
+                        key={`${listIdx}-${i}`} 
+                        className={`flex items-center gap-2 px-4 py-2 rounded-full border backdrop-blur-sm whitespace-nowrap ${badge.color}`}
+                      >
+                        <div className="relative w-3 h-3">
+                          <Image src={`/icons/${badge.icon}.svg`} alt={badge.text} fill className="object-contain brightness-110" />
+                        </div>
+                        <span className="text-[9px] font-black uppercase tracking-widest">{badge.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <div className="px-3 pb-8">
+            <div className="grid grid-cols-1 gap-3 mb-10">
+              {mobileBrands.map((brand, index) => (
+                <BrandCard 
+                  key={brand.id} 
+                  brand={brand} 
+                  gclidValue={gclid || undefined} 
+                  rank={index + 1} 
+                  variant="modal"
+                  priority={index === 0}
+                />
+              ))}
+            </div>
+
+            {/* Compliance in Modal */}
+            <div className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 text-center">
+              <div className="flex justify-center gap-4 mb-6">
+                <div className="w-8 h-8 relative opacity-30 grayscale">
+                  <Image src="/icons/18plus.svg" alt="18+" fill className="object-contain" />
+                </div>
+                <div className="w-20 h-8 relative opacity-30 grayscale">
+                  <Image src="/anj.png" alt="ANJ" fill className="object-contain" />
+                </div>
+                <div className="w-20 h-8 relative opacity-30 grayscale">
+                  <Image src="/gambleaware.png" alt="Responsabilité" fill className="object-contain" />
+                </div>
+              </div>
+              <p className="text-[10px] text-white/30 leading-relaxed font-bold uppercase tracking-widest">
+                L&apos;utilisation doit rester un plaisir. <br />
+                Appelez le 09 74 75 13 13 pour de l&apos;aide.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal Footer */}
+        <div className="bg-black/40 p-6 border-t border-white/5 text-center">
+          <div className="text-[8px] text-white/10 uppercase tracking-[0.4em] font-black">
+            © 2026 PLATFORMSPOTLIGHT.COM
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

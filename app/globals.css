@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card-bg: var(--card-bg);
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --color-gold: #e2b74b;
+  --color-brand-blue: #2563eb;
+  --color-brand-teal: #0ea5e9;
+  --color-cyan-bright: #00f5ff;
+}
+
+:root {
+  --background: #06020f;
+  --foreground: #ffffff;
+  --card-bg: #1e293b;
+  --primary: #2563eb; /* Blue */
+  --accent: #0ea5e9;  /* Teal */
+  --gold-legacy: #e2b74b;
+  --accent-legacy: #2563eb;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .btn-gradient {
+    @apply bg-linear-to-r from-primary to-accent text-white hover:brightness-110 transition-all duration-300;
+  }
+
+  .gold-text {
+    @apply bg-clip-text text-transparent bg-linear-to-r from-[#f9d423] via-[#e2b74b] to-[#b8860b];
+  }
+
+  .brand-glow {
+    box-shadow: 0 0 30px rgba(37, 99, 235, 0.2);
+  }
+
+  .gold-glow {
+    box-shadow: 0 0 20px rgba(226, 183, 75, 0.15);
+  }
+
+  .spotlight-bg {
+    background: radial-gradient(circle at 50% -20%, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+  }
+
+  .platform-card-bg {
+    @apply bg-[#0f172a] border border-white/5 hover:border-primary/40 transition-all duration-500;
+  }
+
+  .gold-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gold-shimmer::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent 45%,
+      rgba(255, 215, 0, 0.1) 50%,
+      transparent 55%
+    );
+    animation: shimmer 3s infinite;
+  }
+
+  .animate-marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee 20s linear infinite;
+    will-change: transform;
+  }
+
+  .podium-gradient {
+    background: linear-gradient(180deg, #150a25 0%, #0a0514 100%);
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  0% { transform: translate(-30%, -30%); }
+  100% { transform: translate(30%, 30%); }
+}
